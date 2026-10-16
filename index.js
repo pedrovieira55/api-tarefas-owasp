@@ -180,3 +180,12 @@ app.delete('/tarefas/:id', async (req, res) => {
 });
 
 app.listen(3000, () => console.log('API rodando na porta 3000'));
+
+//Parâmetros de URL (:id): Não valida se o ID é realmente um número antes de converter
+
+//Filtros de busca (req.query): Aceita o filtro concluida sem checar se a entrada é válida.
+
+//Título sem checagem completa: Não valida se o titulo é um texto (string) e não limita o tamanho máximo de caracteres.
+
+//Campos prioridade e concluida sem filtro: Aceita qualquer valor enviado no
+//  corpo da requisição sem validar os tipos ou opções permitidas.
