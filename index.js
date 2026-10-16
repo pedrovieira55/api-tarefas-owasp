@@ -6,14 +6,12 @@ const pool = require('./db');
 const app = express();
 app.use(express.json());
 
-
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100,
   message: { erro: 'Muitas requisições enviadas. Tente novamente em 15 minutos.' }
 });
 app.use(limiter);
-
 
 function validarTitulo(titulo) {
   if (typeof titulo !== 'string' || titulo.trim().length === 0) {
@@ -25,7 +23,7 @@ function validarTitulo(titulo) {
   return null;
 }
 
-
+// EXERCÍCIO PDF 2: Adicione uma coluna prioridade e permita filtrar por prioridade
 app.get('/tarefas', async (req, res) => {
   try {
     const { concluida, prioridade } = req.query;
@@ -57,7 +55,7 @@ app.get('/tarefas', async (req, res) => {
   }
 });
 
-
+// EXERCÍCIO PDF 2: Implemente paginação no GET/tarefas usando LIMIT e OFFSET
 app.get('/tarefas/paginadas', async (req, res) => {
   try {
     const limite = parseInt(req.query.limite) || 10;
@@ -75,7 +73,7 @@ app.get('/tarefas/paginadas', async (req, res) => {
   }
 });
 
-
+// EXERCÍCIO PDF 1 e 2: Endpoint com resumo/estatísticas usando SQL (COUNT, GROUP BY)
 app.get('/tarefas/resumo', async (req, res) => {
   try {
     const resultado = await pool.query(
@@ -87,7 +85,6 @@ app.get('/tarefas/resumo', async (req, res) => {
     res.status(500).json({ erro: 'Erro ao gerar resumo/estatísticas' });
   }
 });
-
 
 app.get('/tarefas/:id', async (req, res) => {
   try {
@@ -102,7 +99,7 @@ app.get('/tarefas/:id', async (req, res) => {
   }
 });
 
-
+// EXERCÍCIO PDF 1: Adicione um campo prioridade (baixa, média, alta) às tarefas
 app.post('/tarefas', async (req, res) => {
   try {
     const { titulo, prioridade } = req.body;
@@ -124,7 +121,6 @@ app.post('/tarefas', async (req, res) => {
     res.status(500).json({ erro: 'Erro ao criar tarefa' });
   }
 });
-
 
 app.put('/tarefas/:id', async (req, res) => {
   try {
@@ -159,7 +155,7 @@ app.put('/tarefas/:id', async (req, res) => {
   }
 });
 
-
+// EXERCÍCIO PDF 1: Endpoint DELETE /tarefas que apaga todas as tarefas concluídas de uma vez
 app.delete('/tarefas/concluidas', async (req, res) => {
   try {
     await pool.query('DELETE FROM tarefas WHERE concluida = true');
@@ -169,7 +165,6 @@ app.delete('/tarefas/concluidas', async (req, res) => {
     res.status(500).json({ erro: 'Erro ao apagar tarefas concluídas' });
   }
 });
-
 
 app.delete('/tarefas/:id', async (req, res) => {
   try {
